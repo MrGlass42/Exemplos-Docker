@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  app:
+    container_name: app
+    image: mrglass42/nodeapp:iterative
+    ports:
+        - "80:3000"
+    networks:
+        - superRede
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 30s node index.js
+    depends_on:
+        - mysql
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "root!"
+      MYSQL_DATABASE: "superTeste"
+    networks:
+    - superRede
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports:
+      - 8080:8080
+    networks:
+      - superRede
+
+networks: 
+  superRede:
+    driver: bridge
